@@ -3,10 +3,10 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-TorchCAP documentation
+SysSim documentation
 ======================
 
-Overview of TorchCAP
+Overview of SysSim
 ^^^^^^^^^^^^^^^^^^^^
 
 **Main Components**
@@ -20,7 +20,7 @@ Overview of TorchCAP
   * Transform the model execution plan based on the cost estimation
 
 .. image:: img/torchCAP_overview.png
-  :alt: TorchCAP Overview
+  :alt: SysSim Overview
   :align: center
   :width: 100%
 
@@ -34,7 +34,7 @@ Applications in AI Infrastructure
 * performance debugging
 
 .. image:: img/refine_hardware_with_torchcap.png
-  :alt: Refine Hardware with TorchCAP
+  :alt: Refine Hardware with SysSim
   :align: center
   :width: 100%
 
