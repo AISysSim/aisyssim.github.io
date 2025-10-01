@@ -6,7 +6,7 @@ This document describes the automatic sharding mechanism in TorchCAP, detailing 
 Automatic Sharding Overview
 ^^^^^^^^^^^^^^^^^^^^^^
 
-The high-level API for automatic sharding is available via ``torchcap.optimize`` (`api.py <https://github.com/TorchCAP/TorchCAP/blob/6abd50d1a31b0bdf4762c914cf5e583d3810117d/torchcap/api.py>`_). The optimizer performs the following steps:
+The high-level API for automatic sharding is available via ``torchcap.optimize`` (`api.py <https://github.com/AISysSim/TorchCAP/blob/6abd50d1a31b0bdf4762c914cf5e583d3810117d/torchcap/api.py>`_). The optimizer performs the following steps:
 
 1. Converts the input model into an FX graph using torch.export
 
@@ -82,7 +82,7 @@ Therefore, the memory constraint can be represented as
 Sharding Transformation
 ^^^^^^^^^^^^^^^^^^^^^^
 
-The sharding transformation pass is implemented in `tensor_parallel.py <https://github.com/TorchCAP/TorchCAP/blob/6abd50d1a31b0bdf4762c914cf5e583d3810117d/torchcap/transform/tensor_parallel.py>`_.
+The sharding transformation pass is implemented in `tensor_parallel.py <https://github.com/AISysSim/TorchCAP/blob/6abd50d1a31b0bdf4762c914cf5e583d3810117d/torchcap/transform/tensor_parallel.py>`_.
 
 The pass performs the following steps:
 

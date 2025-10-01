@@ -1,21 +1,21 @@
-TorchCAP Quickstart
+AISysSim Quickstart
 ===================
 
 Setup
 ~~~~~
 
-Build the Docker environment required to run TorchCAP:
+Build the Docker environment required to run AISysSim:
 
 .. code-block:: bash
 
-   docker build -t torchcap-env .
+   docker build -t syssim-env .
 
 Profiling Hardware
 ~~~~~~~~~~~~~~~~~~
 
-TorchCAP can optionally profile your hardware to collect detailed performance metrics. This enables more accurate cost estimation.
+AISysSim can optionally profile your hardware to collect detailed performance metrics. This enables more accurate cost estimation.
 
-**Note:** If this step is skipped, TorchCAP will fall back on querying system APIs, which may be less precise.
+**Note:** If this step is skipped, AISysSim will fall back on querying system APIs, which may be less precise.
 
 To profile your cluster:
 
@@ -25,10 +25,10 @@ To profile your cluster:
 
 This command generates a JSON file containing a cost model specific to your hardware. ``-p`` is an optional option that generates the plots of the cost models.
 
-Running TorchCAP with Huggingface models
+Running AISysSim with Huggingface models
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-To run TorchCAP with a specified hardware profile and Huggingface models:
+To run AISysSim with a specified hardware profile and Huggingface models:
 
 Single Device
 ^^^^^^^^^^^^^

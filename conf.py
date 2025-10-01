@@ -6,7 +6,7 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'TorchCAP'
+project = 'SysSim'
 copyright = '2025, mksit'
 author = 'mksit'
 

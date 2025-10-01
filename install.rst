@@ -1,4 +1,4 @@
-Install TorchCAP
+Install SysSim
 ================
 
 Requirements
@@ -11,6 +11,6 @@ Clone the repository
 
 .. code-block:: bash
 
-   git clone https://github.com/TorchCAP/TorchCAP.git
+   git clone https://github.com/AISysSim/TorchCAP.git
 
 
