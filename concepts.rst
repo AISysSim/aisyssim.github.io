@@ -8,6 +8,10 @@ SysSim traces an LLM training step into an **operator graph**, attributes a time
 each operator, and runs a discrete-event simulation over the cluster topology — no real computation
 or weights are needed.
 
+Tracing still requires PyTorch CUDA dispatch: SysSim uses PyTorch fake tensors marked with
+``device="cuda"`` so PyTorch builds the same operator graph shape it would use for CUDA tensors,
+without running the real kernels.
+
 Parallelism
 -----------
 
@@ -49,7 +53,28 @@ learned per-operator residual — see :doc:`calibration`.
 Reading the report
 -------------------
 
-:func:`simulate` returns a :class:`SimulationReport`:
+:func:`simulate` returns a :class:`SimulationReport`; the ``syssim run`` CLI prints the same core
+fields. A typical report looks like:
+
+.. code-block:: text
+
+   SimulationReport(
+     step_time_ms        = 644.6507
+       forward_ms        = 184.5179
+       backward_ms       = 383.1765
+       optimizer_ms      = 39.4327
+     collective_total_ms = 53.9978
+     collective_exposed  = 37.5235
+     achieved_tflops     = 184.55
+     mfu                 = 9.33%
+     hfu                 = 12.43%
+     peak_memory_gb      = 26.133
+     Bottlenecks(
+       dominant_op_type = math
+       top_ops_by_time  = [('optimizer_step_4289', 39.43271286447761), ('op_1181_aten.mm', 4.286653309549106), ('op_1182_aten.mm', 4.21173467212024)]
+       peak_module      = Float16Module
+     )
+   )
 
 .. list-table::
    :header-rows: 1
@@ -64,7 +89,7 @@ Reading the report
    * - ``collective_total_ms`` / ``collective_exposed_ms``
      - Total vs. non-overlapped collective time.
    * - ``achieved_tflops``, ``mfu``, ``hfu``
-     - Throughput and model/hardware FLOPs utilization.
+     - Throughput, Model FLOPs Utilization (MFU), and Hardware FLOPs Utilization (HFU).
    * - ``peak_memory_gb``
      - Peak per-GPU memory (heaviest pipeline stage).
    * - ``pp_stage_memory_gb``
