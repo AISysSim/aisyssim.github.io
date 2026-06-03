@@ -1,52 +1,89 @@
-AISysSim Quickstart
-===================
+Quickstart
+==========
 
-Setup
-~~~~~
+This walks through a single simulation of **Qwen3-1.7B** on a 4-GPU **GH200** node, using the
+example configs shipped in the SysSim repo.
 
-Build the Docker environment required to run AISysSim:
+Python API
+----------
+
+Three entry points cover the common needs — run a full simulation, check memory only, or sweep a
+config axis.
+
+.. tab-set::
+
+   .. tab-item:: simulate
+
+      .. code-block:: python
+
+         import syssim
+
+         MODEL = "examples/configs/models/qwen3-1_7b.yaml"
+         HW    = "examples/configs/hardware/isambard_gh200_4gpu.yaml"
+
+         report = syssim.simulate(
+             model=MODEL, hardware=HW,
+             parallelism=syssim.ParallelismConfig(tp=2, dp=2),
+             training=syssim.TrainingConfig(micro_batch=1, global_batch=8, dtype="bf16"),
+         )
+         print(report.step_time_ms, report.mfu, report.peak_memory_gb)
+
+   .. tab-item:: estimate_memory
+
+      .. code-block:: python
+
+         import syssim
+
+         mem = syssim.estimate_memory(
+             model="examples/configs/models/qwen3-1_7b.yaml",
+             hardware="examples/configs/hardware/isambard_gh200_4gpu.yaml",
+             parallelism=syssim.ParallelismConfig(tp=2, dp=2),
+             training=syssim.TrainingConfig(micro_batch=1, global_batch=8, dtype="bf16"),
+         )
+         print(mem.peak_memory_gb, mem.pp_stage_memory_gb)
+
+   .. tab-item:: sweep
+
+      .. code-block:: python
+
+         import syssim
+
+         result = syssim.sweep(
+             model="examples/configs/models/qwen3-1_7b.yaml",
+             hardware="examples/configs/hardware/isambard_gh200_4gpu.yaml",
+             parallelism=syssim.ParallelismConfig(),
+             training=syssim.TrainingConfig(micro_batch=1, global_batch=8, dtype="bf16"),
+             over={"parallelism.tp": [1, 2, 4]},
+         )
+         best = result.best("mfu")
+         print(best.inputs, best.metrics)
+
+Command line
+------------
+
+The same three workflows are available from the ``syssim`` CLI:
 
 .. code-block:: bash
 
-   docker build -t syssim-env .
+   # Full report (step time, MFU, memory, bottlenecks)
+   syssim run examples/configs/models/qwen3-1_7b.yaml \
+       --hardware examples/configs/hardware/isambard_gh200_4gpu.yaml \
+       --tp 2 --dp 2 --micro-batch 1 --global-batch 8
 
-Profiling Hardware
-~~~~~~~~~~~~~~~~~~
+   # Memory only
+   syssim memory examples/configs/models/qwen3-1_7b.yaml \
+       --hardware examples/configs/hardware/isambard_gh200_4gpu.yaml \
+       --micro-batch 1 --global-batch 8
 
-AISysSim can optionally profile your hardware to collect detailed performance metrics. This enables more accurate cost estimation.
+   # Sweep an axis, pick the best by a metric
+   syssim sweep examples/configs/models/qwen3-1_7b.yaml \
+       --hardware examples/configs/hardware/isambard_gh200_4gpu.yaml \
+       --micro-batch 1 --global-batch 8 \
+       --over parallelism.tp=1,2,4 --metric mfu
 
-**Note:** If this step is skipped, AISysSim will fall back on querying system APIs, which may be less precise.
+Next steps
+----------
 
-To profile your cluster:
-
-.. code-block:: bash
-
-   bash profile_cluster.sh -o profile.json -n <num_nodes> -d <num_devices_per_node> [-p]
-
-This command generates a JSON file containing a cost model specific to your hardware. ``-p`` is an optional option that generates the plots of the cost models.
-
-Running AISysSim with Huggingface models
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-To run AISysSim with a specified hardware profile and Huggingface models:
-
-Single Device
-^^^^^^^^^^^^^
-
-.. code-block:: bash
-
-   bash examples/huggingface/run_docker.sh -m facebook/opt-6.7b -e profile.json -n 1
-
-Multiple Devices
-^^^^^^^^^^
-
-.. code-block:: bash
-
-   bash examples/huggingface/run_docker.sh -m facebook/opt-6.7b -e profile.json -n 2
-
-Arguments
-^^^^^^^^^
-- ``-n``: Number of GPUs
-- ``-m``: Hugging Face model path (e.g., ``facebook/opt-6.7b``)
-- ``-e``: Path to the hardware profile JSON file generated during profiling
-
+- :doc:`configuration` — write your own model and hardware YAML.
+- :doc:`concepts` — understand the report fields and what the simulator models.
+- :doc:`api/highlevel` — the full Python API.
