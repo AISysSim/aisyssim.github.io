@@ -1,79 +1,85 @@
-.. TorchCAP documentation master file, created by
-   sphinx-quickstart on Wed Mar 26 14:44:20 2025.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+SysSim
+======
 
-SysSim documentation
-======================
+.. rst-class:: syssim-tagline
 
-Overview of SysSim
-^^^^^^^^^^^^^^^^^^^^
+   Estimate the step time and peak memory of LLM training — on hardware you don't have — without running real computation.
 
-**Main Components**
+**SysSim** models tensor, sequence, data, context, and pipeline parallelism and reports step time,
+MFU, and per-GPU memory (including per-pipeline-stage peaks and OOM) for distributed LLM training.
 
-* System Cost Estimator
-  
-  * Predict the runtime and memory consumption of a model program
+.. grid:: 2
+   :gutter: 3
+   :margin: 2 0 0 0
 
-* Execution Plan Optimizer
-  
-  * Transform the model execution plan based on the cost estimation
+   .. grid-item-card:: :octicon:`rocket` Getting Started
+      :link: install
+      :link-type: doc
 
-.. image:: img/torchCAP_overview.png
-  :alt: SysSim Overview
-  :align: center
-  :width: 100%
+      Install SysSim and run your first simulation in a few minutes.
 
+   .. grid-item-card:: :octicon:`book` API Reference
+      :link: api/index
+      :link-type: doc
 
+      Every public function, class, and CLI command, documented.
 
-Applications in AI Infrastructure
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   .. grid-item-card:: :octicon:`gear` Configuration
+      :link: configuration
+      :link-type: doc
 
-* automatic parallelism
-* resource scheduling 
-* performance debugging
+      The two-file YAML system for models and hardware.
 
-.. image:: img/refine_hardware_with_torchcap.png
-  :alt: Refine Hardware with SysSim
-  :align: center
-  :width: 100%
+   .. grid-item-card:: :octicon:`light-bulb` Concepts
+      :link: concepts
+      :link-type: doc
 
-Checklist
-=========
+      What the simulator models and how to read its report.
 
-- Code ✅
-- Documentation
-   - Installation ✅
-   - Quick Start ✅
-   - Cost Model ✅
-   - Auto-Sharding ✅
-- Benchmark ✅
+Why SysSim
+----------
 
+- **Estimate training step time and MFU** on accelerators you can't access.
+- **Compare parallelism strategies** (TP / SP / DP / CP / PP) before allocating a cluster.
+- **Predict peak per-GPU memory** and catch OOM ahead of time.
+- **Find the bottleneck** — top ops by time, dominant op type, heaviest pipeline stage.
 
+A 30-second taste
+-----------------
 
-.. Add your content using ``reStructuredText`` syntax. See the
-.. `reStructuredText <https://www.sphinx-doc.org/en/master/usage/restructuredtext/index.html>`_
-.. documentation for details.
+.. code-block:: python
 
+   import syssim
 
-.. Include the background, motivation, and goals of the project here.
-.. toctree::
-  :maxdepth: 1
-  :caption: Getting Started
-
-  install.rst
-  quickstart.rst
-
-.. Include the methodology, and architecture of the project here.
-.. toctree::
-  :maxdepth: 1
-  :caption: Deep Dive
-
-  cost_model.rst
-  auto_sharding.rst
+   report = syssim.simulate(
+       model="examples/configs/models/qwen3-1_7b.yaml",
+       hardware="examples/configs/hardware/isambard_gh200_4gpu.yaml",
+       parallelism=syssim.ParallelismConfig(tp=2, dp=2),
+       training=syssim.TrainingConfig(micro_batch=1, global_batch=8, dtype="bf16"),
+   )
+   print(report.step_time_ms, report.mfu, report.peak_memory_gb)
 
 .. toctree::
-  :maxdepth: 1
-  :caption: Benchmark
+   :hidden:
+   :caption: Getting Started
 
-  benchmark.rst
+   install
+   quickstart
+   configuration
+
+.. toctree::
+   :hidden:
+   :caption: Guides
+
+   concepts
+   calibration
+
+.. toctree::
+   :hidden:
+   :caption: API Reference
+
+   api/index
+   api/highlevel
+   api/config
+   api/operator_graph
+   cli
