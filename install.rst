@@ -6,8 +6,9 @@ Requirements
 
 - **Python 3.10+**
 - A working PyTorch install (``torch >= 2.6``).
-- A CUDA-capable GPU for tracing and simulation. SysSim uses PyTorch fake tensors marked with
-  ``device="cuda"``, so PyTorch still needs CUDA kernel dispatch to build the operator graph.
+- A PyTorch GPU backend exposed through ``torch.cuda`` for tracing and simulation. SysSim uses
+  PyTorch fake tensors marked with ``device="cuda"``, so PyTorch still needs GPU dispatch to build
+  the operator graph. Any GPU backend supported through that PyTorch interface can be used.
   Profiling real layers for a calibrated estimator also needs GPUs.
 
 SysSim depends on ``torch``, ``megatron-core``, ``megatron-bridge``, ``numpy``, ``pandas``,
