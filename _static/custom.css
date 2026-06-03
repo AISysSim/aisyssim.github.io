@@ -1,0 +1,50 @@
+/* SysSim docs — polish on top of Furo */
+:root {
+  --color-brand-primary: #5b4ee5;
+  --color-brand-content: #5b4ee5;
+}
+
+/* Hero on the landing page */
+.syssim-hero {
+  padding: 1.5rem 0 0.5rem;
+}
+.syssim-hero h1 {
+  font-size: 2.6rem;
+  line-height: 1.1;
+  margin-bottom: 0.3rem;
+}
+.syssim-tagline {
+  font-size: 1.15rem;
+  color: var(--color-foreground-secondary);
+  margin-bottom: 1.5rem;
+}
+
+/* sphinx-design cards: subtle lift + brand border on hover */
+.sd-card {
+  border-radius: 10px;
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+.sd-card:hover {
+  border-color: var(--color-brand-primary);
+  box-shadow: 0 4px 18px rgba(91, 78, 229, 0.12);
+}
+
+/* Tables: tighter, readable API field tables */
+table.docutils {
+  width: 100%;
+  border-collapse: collapse;
+}
+table.docutils td, table.docutils th {
+  vertical-align: top;
+}
+
+/* Inline code accent */
+code.literal {
+  color: var(--color-brand-content);
+}
+
+/* API signature blocks stand out a touch */
+dl.py > dt {
+  border-left: 3px solid var(--color-brand-primary);
+  padding-left: 0.6rem;
+}
