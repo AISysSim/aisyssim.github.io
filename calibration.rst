@@ -9,14 +9,32 @@ as the fallback for any uncalibrated op.
 Using a calibrated model
 -------------------------
 
+Use the same hardware configuration you would pass to ``simulate`` or ``estimate_memory``, including
+its topology. The calibration-specific parameter is:
+
+.. list-table::
+   :header-rows: 1
+   :widths: 25 75
+
+   * - Parameter
+     - Meaning
+   * - ``calibrated_model``
+     - Path to a directory containing fitted tree models. Passing this value makes SysSim load and
+       use ``TreeEstimator`` automatically.
+
 .. code-block:: python
 
-   from syssim.compute.tree_estimator import TreeEstimator
    from syssim import HardwareConfig
 
    hw = HardwareConfig(
        peak_tflops_mm=1979, peak_tflops_math=989,
        peak_memory_bandwidth_GBps=3350, gpus_per_node=4,
+       topology={
+           "dims": ["fully_connected"],
+           "size": [4],
+           "bandwidth": [450],
+           "latency": [12000],
+       },
        calibrated_model="data/gh200",   # directory with fitted trees
    )
 
