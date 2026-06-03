@@ -8,9 +8,10 @@ SysSim traces an LLM training step into an **operator graph**, attributes a time
 each operator, and runs a discrete-event simulation over the cluster topology — no real computation
 or weights are needed.
 
-Tracing still requires PyTorch CUDA dispatch: SysSim uses PyTorch fake tensors marked with
-``device="cuda"`` so PyTorch builds the same operator graph shape it would use for CUDA tensors,
-without running the real kernels.
+Tracing still requires a PyTorch GPU backend exposed through ``torch.cuda``. SysSim uses PyTorch
+fake tensors marked with ``device="cuda"`` so PyTorch builds the same operator graph shape it would
+use for GPU tensors, without running the real kernels. On AMD systems, PyTorch ROCm/HIP builds reuse
+the same ``torch.cuda`` interface.
 
 Parallelism
 -----------
