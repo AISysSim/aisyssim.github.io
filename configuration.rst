@@ -62,12 +62,15 @@ A multi-level fabric (e.g. intra-node NVLink + inter-node Slingshot) adds a seco
 list. The number of nodes is derived from ``world_size / gpus_per_node``. See
 :class:`HardwareConfig` for every field.
 
-Other accelerator vendors
--------------------------
+Generic accelerator targets
+---------------------------
 
-Hardware targets are vendor-neutral. To simulate another accelerator family, provide that device's
-compute peaks, memory bandwidth, HBM capacity, and topology. For example, an AMD MI300-style target
-uses the same schema:
+SysSim hardware targets are described by capabilities, not by vendor-specific code paths. The same
+model, parallelism, and training configuration can be evaluated against any accelerator-like target
+once you provide the target's compute peaks, memory bandwidth, HBM capacity, and communication
+topology.
+
+AMD is one example of this generic path. An MI300-style target uses the same hardware YAML schema:
 
 .. code-block:: yaml
 
@@ -86,9 +89,9 @@ uses the same schema:
      latency:   [ 12000 ]             # replace with measured latency (ns)
 
 Only the hardware YAML changes; the model YAML, parallelism config, and training config stay the
-same. The default roofline estimator uses these hardware peaks directly. For higher accuracy on a
-specific accelerator, build a calibrated estimator for that device and set ``calibrated_model`` in
-the hardware YAML.
+same. The default roofline estimator uses the supplied peaks directly, regardless of vendor. For
+higher accuracy on a specific accelerator, build a calibrated estimator for that device and set
+``calibrated_model`` in the hardware YAML.
 
 Parallelism & training knobs
 -----------------------------

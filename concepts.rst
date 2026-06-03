@@ -10,8 +10,8 @@ or weights are needed.
 
 Tracing still requires a PyTorch GPU backend exposed through ``torch.cuda``. SysSim uses PyTorch
 fake tensors marked with ``device="cuda"`` so PyTorch builds the same operator graph shape it would
-use for GPU tensors, without running the real kernels. On AMD systems, PyTorch ROCm/HIP builds reuse
-the same ``torch.cuda`` interface.
+use for GPU tensors, without running the real kernels. This is a PyTorch interface requirement; the
+hardware model itself is provided separately through the hardware YAML.
 
 Parallelism
 -----------
